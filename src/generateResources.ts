@@ -1,7 +1,7 @@
 import fs from 'graceful-fs';
 import * as babel from '@babel/core';
 import prettier, { Options } from 'prettier';
-import I18nTransform from './lib/index'
+import I18nTransform from './transform/index'
 import babelConfig from '../babel.config.js';
 const compiler = require('vue-template-compiler')
 const domCompiler = require('@vue/compiler-dom');
