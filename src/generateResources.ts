@@ -1,10 +1,10 @@
 import fs from 'graceful-fs';
 import * as babel from '@babel/core';
 import prettier, { Options } from 'prettier';
-
-import BabelPluginI18n from './BabelPluginI18n';
-
+import I18nTransform from './lib/index'
 import babelConfig from '../babel.config.js';
+const compiler = require('vue-template-compiler')
+const domCompiler = require('@vue/compiler-dom');
 
 export const resource = (i18nResource: {[key: string]: string}) => {
   const formatted = Object.keys(i18nResource)
@@ -33,39 +33,48 @@ export const getResourceSource = (i18nResource: {[key: string]: string}) => {
   return prettier.format(source, prettierDefaultConfig);
 };
 
-export const generateResources = (files: string[], keyMaxLength: number = 40) => {
-  BabelPluginI18n.setMaxKeyLength(keyMaxLength);
+
+export const generateResources = (files: string[]) => {
 
   let phrases = [];
   for (const filename of files) {
     const source = fs.readFileSync(filename, 'utf8');
 
+    const sfcd = compiler.parseComponent(source)
+    const templateAST = domCompiler.compile(sfcd.template!.content)
+    const vtast = compiler.compile(sfcd.template!.content)
+    const templateTransform = new I18nTransform()
+    const tast = templateTransform.generate(vtast.ast)
+
+    // console.log(vtast.ast)
+    // console.log(JSON.stringify(templateAST, null ,2))
+    // console.log(JSON.stringify(tast, null ,2))
+
+    return;
+
     try {
       babel.transformSync(source, {
         ast: false,
         code: true,
-        plugins: [...babelConfig.plugins, BabelPluginI18n],
+        plugins: [...babelConfig.plugins],
         sourceType: 'unambiguous',
         filename,
       });
 
-      const newPhrases = BabelPluginI18n.getExtractedStrings();
+
 
       phrases = [
-        ...phrases,
-        ...newPhrases,
+        ...phrases
       ];
     } catch (err) {
       console.log('err: ', filename, err);
     }
   }
 
-  const i18nMap = BabelPluginI18n.getI18Map();
 
-  fs.writeFileSync('resource.tsx', resource(i18nMap));
+  fs.writeFileSync('resource.js', resource({}));
 
   // tslint:disable-next-line
   console.log('generate resource file: resource.tsx');
 
-  return i18nMap;
 };

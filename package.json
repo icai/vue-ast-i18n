@@ -1,13 +1,16 @@
 {
-  "name": "ast-i18n",
-  "version": "1.0.1",
-  "author": "Sibelius Seraphini <sibeliusseraphini@gmail.com> (https://github.com/sibelius)",
+  "name": "vue-ast-i18n",
+  "version": "1.0.0",
+  "author": "Terry Cai <gidcai@gmail.com> (https://github.com/icai)",
   "bin": {
-    "ast-i18n": "./bin/cli"
+    "vue-ast-i18n": "./bin/cli"
   },
   "dependencies": {
+    "@babel/template": "^7.12.13",
+    "@vue/compiler-dom": "^3.0.7",
     "ast-types": "^0.12.2",
     "cosmiconfig": "^5.1.0",
+    "debug": "^4.3.1",
     "diacritics": "^1.3.0",
     "find": "^0.2.9",
     "graceful-fs": "^4.1.15",
@@ -15,6 +18,7 @@
     "prettier": "^1.16.4",
     "shelljs": "^0.8.3",
     "slugify": "^1.3.4",
+    "vue-template-compiler": "^2.6.12",
     "yargs": "^12.0.5"
   },
   "devDependencies": {
@@ -58,7 +62,7 @@
   "scripts": {
     "b": "babel-node --extensions \".es6,.js,.es,.jsx,.mjs,.ts,.tsx\"",
     "build": "rm -rf lib/* && babel src --extensions \".es6,.js,.es,.jsx,.mjs,.ts,.tsx\" --ignore __test__,__testfixtures__,*.spec.ts --out-dir lib",
-    "fixtures": "yarn start --src=fixtures",
+    "fixtures": "yarn start --src=fixtures/Simple.vue",
     "prepublish": "npm run build",
     "start": "yarn b src/index.ts",
     "test": "jest",

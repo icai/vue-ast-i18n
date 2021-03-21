@@ -72,7 +72,7 @@ export default {
 }
 ```
 
-### How to use resource with react-i18next?
+### How to use resource with VueI18n?
 - rename resource.tsx to your main language, like en.ts
 - create other resource languages based on the generated one
 
@@ -146,4 +146,6 @@ module.exports = {
 ## Credits
 
 Inspired by https://github.com/sibelius/ast-i18n
+
+Inspired by https://github.com/vuejs/vue-codemod
 

@@ -25,5 +25,5 @@ const argv = yargs
   )
   .argv;
 
-const jsFiles = shell.find(argv.src).filter(path => /\.(js|ts|tsx)$/.test(path));
-generateResources(jsFiles, argv.keyMaxLength);
+const jsFiles = shell.find(argv.src).filter(path => /\.(vue|js|ts|tsx)$/.test(path));
+generateResources(jsFiles);
