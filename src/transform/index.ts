@@ -45,8 +45,6 @@ export default class I18nTransform {
   }
 
   genElement(node: ASTNode): string {
-    console.log(node)
-
     if (!node) {
       return ''
     } else if (node.ifConditions && !node.ifConditionsHasGenerated) {

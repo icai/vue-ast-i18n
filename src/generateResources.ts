@@ -3,8 +3,8 @@ import * as babel from '@babel/core';
 import prettier, { Options } from 'prettier';
 import I18nTransform from './transform/index'
 import babelConfig from '../babel.config.js';
-const compiler = require('vue-template-compiler')
-const domCompiler = require('@vue/compiler-dom');
+import * as compiler from 'vue-template-compiler';
+import * as domCompiler from '@vue/compiler-dom';
 
 export const resource = (i18nResource: {[key: string]: string}) => {
   const formatted = Object.keys(i18nResource)
@@ -33,6 +33,29 @@ export const getResourceSource = (i18nResource: {[key: string]: string}) => {
   return prettier.format(source, prettierDefaultConfig);
 };
 
+export const stringifyReplacer = () => {
+  const seen = new WeakSet();
+  return (_key: any, value: any) => {
+    if (typeof value === "object" && value !== null) {
+      if (seen.has(value)) {
+        return;
+      }
+      seen.add(value);
+    }
+    return value;
+  };
+};
+
+/**
+ * print Object 
+ * @param obj 
+ * @returns 
+ */
+export const info = (obj: any, replacer = false as Boolean) => {
+  const repr = replacer ? stringifyReplacer : undefined
+  return console.log(JSON.stringify(obj, repr, 2))
+}
+
 
 export const generateResources = (files: string[]) => {
 
@@ -43,13 +66,19 @@ export const generateResources = (files: string[]) => {
     const sfcd = compiler.parseComponent(source)
     const templateAST = domCompiler.compile(sfcd.template!.content)
     const vtast = compiler.compile(sfcd.template!.content)
-    const templateTransform = new I18nTransform()
+    const templateTransform = new I18nTransform({
+      /**
+       * 
+       * @param _str 
+       */
+      transform(_str:  string) {
+
+      }
+    })
     const tast = templateTransform.generate(vtast.ast)
-
-    // console.log(vtast.ast)
-    // console.log(JSON.stringify(templateAST, null ,2))
-    // console.log(JSON.stringify(tast, null ,2))
-
+    info(vtast.ast, true)
+    // info(templateAST)
+    // info(tast)
     return;
 
     try {
