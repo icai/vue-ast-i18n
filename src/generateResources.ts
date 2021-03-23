@@ -5,6 +5,7 @@ import I18nTransform from './transform/index'
 import babelConfig from '../babel.config.js';
 import * as compiler from 'vue-template-compiler';
 import * as domCompiler from '@vue/compiler-dom';
+import { parse as parseSFC, stringify as stringifySFC } from './sfcUtils'
 
 export const resource = (i18nResource: {[key: string]: string}) => {
   const formatted = Object.keys(i18nResource)
@@ -61,10 +62,10 @@ export const generateResources = (files: string[]) => {
 
   let phrases = [];
   for (const filename of files) {
-    const source = fs.readFileSync(filename, 'utf8');
+    let source = fs.readFileSync(filename, 'utf8');
 
     const sfcd = compiler.parseComponent(source)
-    const templateAST = domCompiler.compile(sfcd.template!.content)
+    // const templateAST = domCompiler.compile(sfcd.template!.content)
     const vtast = compiler.compile(sfcd.template!.content)
     const templateTransform = new I18nTransform({
       /**
@@ -75,11 +76,13 @@ export const generateResources = (files: string[]) => {
 
       }
     })
-    const tast = templateTransform.generate(vtast.ast)
-    info(vtast.ast, true)
-    // info(templateAST)
-    // info(tast)
-    return;
+    const { code } = templateTransform.generate(vtast.ast)
+    sfcd.template.content = code
+    source = stringifySFC(sfcd)
+    return
+    // info(sfcd)
+    // console.log(stringifySFC(sfcd))
+
 
     try {
       babel.transformSync(source, {
