@@ -79,10 +79,6 @@ export const generateResources = (files: string[]) => {
     const { code } = templateTransform.generate(vtast.ast)
     sfcd.template.content = code
     source = stringifySFC(sfcd)
-    return
-    // info(sfcd)
-    // console.log(stringifySFC(sfcd))
-
 
     try {
       babel.transformSync(source, {
@@ -94,10 +90,6 @@ export const generateResources = (files: string[]) => {
       });
 
 
-
-      phrases = [
-        ...phrases
-      ];
     } catch (err) {
       console.log('err: ', filename, err);
     }
@@ -107,6 +99,6 @@ export const generateResources = (files: string[]) => {
   fs.writeFileSync('resource.js', resource({}));
 
   // tslint:disable-next-line
-  console.log('generate resource file: resource.tsx');
+  console.log('generate resource file: resource.js');
 
 };

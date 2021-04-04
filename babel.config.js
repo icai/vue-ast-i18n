@@ -2,8 +2,8 @@ const { workspaces = [] } = require('./package.json');
 
 module.exports = {
   babelrcRoots: ['.', ...(workspaces.packages || workspaces)],
+  
   presets: [
-    '@babel/preset-flow',
     [
       '@babel/preset-env',
       {
